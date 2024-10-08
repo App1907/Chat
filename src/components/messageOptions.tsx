@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Modal, TouchableOpacity, Image, StyleSheet, TouchableWithoutFeedback, Alert } from 'react-native';
-import { Icons } from '../assets'; // Import icons as needed
+import { Icons } from '../assets'; 
 
 interface MessageOptionsModalProps {
   visible: boolean;
@@ -13,7 +13,7 @@ interface MessageOptionsModalProps {
   setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const reactions = ['👍', '❤️', '😂', '🎉', '👎']; // Reactions from the image
+const reactions = ['👍', '❤️', '😂', '🎉', '👎']; 
 
 const MessageOptionsModal: React.FC<MessageOptionsModalProps> = ({
   visible,
@@ -48,7 +48,7 @@ const MessageOptionsModal: React.FC<MessageOptionsModalProps> = ({
   const confirmDelete = () => {
     Alert.alert(
       "Delete message?",
-      "Are you sure you want to delete this\n message?",
+      "Are you sure you want to delete this\nmessage?",
       [
         { text: "No, Cancel", style: "cancel" },
         { text: "Yes, Delete", onPress: onDelete, style: "destructive" }
@@ -57,9 +57,9 @@ const MessageOptionsModal: React.FC<MessageOptionsModalProps> = ({
   };
 
 
-  const handleDeletePress = () => {
-    setShowDeleteModal(true); // Show delete modal when Delete is pressed
-  };
+  // const handleDeletePress = () => {
+  //   setShowDeleteModal(true); 
+  // };
 
 
   return (
@@ -77,7 +77,7 @@ const MessageOptionsModal: React.FC<MessageOptionsModalProps> = ({
               ))}
             </View>
 
-            {/* Modal Options (Reply, Forward, etc.) */}
+
             <View style={styles.modalOptions}>
               <TouchableOpacity style={styles.option}>
                 <Image source={Icons.reply} style={styles.icon} />
@@ -109,29 +109,7 @@ const MessageOptionsModal: React.FC<MessageOptionsModalProps> = ({
       </TouchableWithoutFeedback>
     </Modal>
 
-    {/* Delete Confirmation Modal */}
-    {showDeleteModal && (
-        <Modal visible={showDeleteModal} transparent animationType="fade">
-          <View style={styles.deleteModalBackground}>
-            <View style={styles.deleteModalContent}>
-              <View style={styles.deleteIconContainer}>
-                <Image source={Icons.deleteIcon} style={styles.deleteIcon} />
-              </View>
-              <Text style={styles.deleteTitle}>Delete message?</Text>
-              <Text style={styles.deleteSubtitle}>Are you sure you want to delete this message?</Text>
-
-              <View style={styles.buttonRow}>
-                <TouchableOpacity style={styles.cancelButton} onPress={() => setShowDeleteModal(false)}>
-                  <Text style={styles.cancelButtonText}>No, Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.deleteButton} >
-                  <Text style={styles.deleteButtonText}>Yes, Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
-      )}
+    
     </>
   );
 };
@@ -156,6 +134,24 @@ const styles = StyleSheet.create({
   reaction: {
     fontSize: 28,
   },
+
+
+  reactionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  reactionButton: {
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+    marginHorizontal: 5,
+  },
+  reactionEmoji: {
+    fontSize: 24,
+  },
+
+  
   modalOptions: {
     borderTopWidth: 1,
     borderTopColor: '#E5E5E5',

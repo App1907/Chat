@@ -21,6 +21,8 @@ const Icons = {
     star: require('./icons/star.png'),
     edit: require('./icons/edit.png'),
     deleteIcon: require('./icons/deleteIcon.png'),
+    plus: require('./icons/plus.png'),
+    send: require('./icons/send.png'),
   };
   const Images = {
     landing_img: require('./images/landing.png'),

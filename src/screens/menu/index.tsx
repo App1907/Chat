@@ -17,26 +17,28 @@ import Header from '../../components/header';
 import SearchBar from '../../components/searchBar'; 
 import { Icons, Images } from '../../assets';
 
-// Helper function to get initials from names
+
+
 const getInitials = (firstName: string, lastName: string) => {
   return `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
 };
 
-// Function to render individual chat items
+
 const renderItem = ({ item }: any, navigation: any) => (
   <TouchableOpacity
     onPress={() =>
       navigation.navigate('ChatScreen', {
         name: `${item.firstName} ${item.lastName}`,
         initials: getInitials(item.firstName, item.lastName),
-        contact: `${item.firstName}_${item.lastName}`, // Use the first and last name as the contact key
+        contact: `${item.firstName}_${item.lastName}`, 
       })
     }
   >
     <View style={styles.resultItem}>
       <View style={styles.profileCircle}>
+
         <Text style={styles.profileInitials}>
-          {getInitials(item.firstName, item.lastName)}
+          {`${item.firstName.charAt(0)}${item.lastName.charAt(0)}`}
         </Text>
       </View>
       <View style={styles.resultInfo}>
@@ -47,11 +49,14 @@ const renderItem = ({ item }: any, navigation: any) => (
           {item.phone === '' ? 'Start a new chat' : `You: ${item.phone}`}
         </Text>
       </View>
+
+      
+      {/* <Text style={styles.resultTime}>01:48 AM</Text> */}
     </View>
   </TouchableOpacity>
 );
 
-// Main MessageScreen component
+
 const MessageScreen = ({ navigation }: { navigation: any }) => {
   const [showModal, setShowModal] = useState(false);
   const [chats, setChats] = useState([]);
@@ -69,52 +74,55 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
     const fetchChats = async () => {
       try {
         const chatPromises = jsonData.users.map(async (contact) => {
-          // Construct the key using firstName and lastName
           const key = `${contact.firstName}_${contact.lastName}`;
-          const messages = await AsyncStorage.getItem(key);  // Use key instead of contact.name
-          return { 
-            ...contact, 
-            messages: messages ? JSON.parse(messages) : [] 
-          };
+          const messages = await AsyncStorage.getItem(key);
+          // Limit the amount of data retrieved and stored
+          let parsedMessages = messages ? JSON.parse(messages) : [];
+          if (parsedMessages.length > 50) {
+            // Only keep the last 50 messages to prevent overflow
+            parsedMessages = parsedMessages.slice(-50);
+          }
+          return { ...contact, messages: parsedMessages };
         });
-
+  
         const chatResults = await Promise.all(chatPromises);
-        const existingChats = chatResults.filter(chat => chat.messages.length > 0);
+        const existingChats = chatResults.filter((chat) => chat.messages.length > 0);
         setChats(existingChats);
       } catch (error) {
         console.error('Error fetching chats from AsyncStorage:', error);
       }
     };
-
+  
     fetchChats();
-  }, [chats]);
+  }, []);
+  
 
   return (
     <View style={styles.container}>
       <Header setShowModal={setShowModal} />
       <SearchBar />
-      <View style={styles.noChatContainer}>
+      <View style={styles.chatListContainer}>
         {chats.length === 0 ? (
           <>
+          <View style={styles.noChatContainer}>
             <Image source={Images.nochat} style={styles.noChatIcon} />
             <Text style={styles.noChatText}>No chats, yet!</Text>
             <TouchableOpacity style={styles.startChatButton} onPress={start}>
               <Text style={styles.startChatButtonText}>Start Chat</Text>
             </TouchableOpacity>
+            </View>
           </>
         ) : (
           <FlatList
             showsVerticalScrollIndicator={false}
             data={chats}
             renderItem={({ item }) => renderItem({ item }, navigation)}
-            keyExtractor={(item) => `${getInitials(item.firstName, item.lastName)}_${item.firstName}_${item.lastName}`}
-
-            // keyExtractor={(item) => `${item.firstName}_${item.lastName}`}
+            keyExtractor={(item) => `${item.firstName}_${item.lastName}`}
           />
         )}
       </View>
 
-      {/* Modal for Start Chat Options */}
+
       <Modal visible={showModal} transparent animationType="slide">
         <TouchableWithoutFeedback onPress={start}>
           <View style={styles.modalBackground}>
@@ -139,17 +147,24 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
   );
 };
 
-// Stylesheet
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#e7edf3',
   },
+  chatListContainer: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+
   noChatContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   noChatIcon: {
     width: 166,
     height: 130,
@@ -200,6 +215,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
+    backgroundColor: 'white',
     borderBottomColor: '#E5E5E5',
     borderBottomWidth: 1,
     justifyContent: 'space-between',
@@ -209,6 +225,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     width: 50,
     height: 50,
+    marginHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -221,20 +238,16 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     flex: 1,
   },
-
-
-  resultFullName: {
+  resultName: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#4A4A4A',
   },
-
-  
-  resultName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   resultPhoneNumber: {
+    fontSize: 14,
+    color: '#AAB4BE',
+  },
+  resultTime: {
     fontSize: 14,
     color: '#AAB4BE',
   },
