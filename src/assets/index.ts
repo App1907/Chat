@@ -31,6 +31,10 @@ const Icons = {
     add: require('./images/add.png'),
     nochat: require('./images/no-chat.png'),
     noResults: require('./images/noResults.png'),
+    homeIcon: require('./images/homes.png'),
+    settingsIcon: require('./images/star.png'),
+    shopIcon: require('./images/user.png'),
+    Icon: require('./images/menuIcon.png'),
 
   };
   
