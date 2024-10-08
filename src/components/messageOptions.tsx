@@ -31,10 +31,10 @@ const MessageOptionsModal: React.FC<MessageOptionsModalProps> = ({
     const updatedMessages = messages.map((msg) => {
       if (msg._id === message._id) {
         if (msg.reactions && msg.reactions.includes(reaction)) {
-          // Remove reaction if it already exists
+
           msg.reactions = msg.reactions.filter((r: string) => r !== reaction);
         } else {
-          // Add reaction
+
           msg.reactions = [...(msg.reactions || []), reaction];
         }
       }
@@ -64,7 +64,7 @@ const MessageOptionsModal: React.FC<MessageOptionsModalProps> = ({
 
   return (
     <>
-    <Modal visible={visible} transparent animationType="slide">
+    <Modal visible={visible} transparent animationType="fade">
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalBackground}>
           <View style={styles.modalContent}>

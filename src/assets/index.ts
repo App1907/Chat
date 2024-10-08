@@ -4,6 +4,7 @@ const Icons = {
     backicon: require('./icons/backicon.png'),
     add: require('./icons/add.png'),
     adduser:require('./icons/adduser.png'),
+    useradd: require('./icons/useradd.png'),
     graySearch: require('./icons/graySearch.png'),
     search: require('./icons/search.png'),
     newChat: require('./icons/newChat.png'),

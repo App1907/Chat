@@ -14,15 +14,18 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jsonData from '../../assets/data.json';
 import Header from '../../components/header';
-import SearchBar from '../../components/searchBar'; 
+import SearchBar from '../../components/searchBar';
 import { Icons, Images } from '../../assets';
-
-
+import { useIsFocused } from '@react-navigation/native';
 
 const getInitials = (firstName: string, lastName: string) => {
   return `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
 };
 
+const formatTime = (timestamp: string) => {
+  const date = new Date(timestamp);
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
 
 const renderItem = ({ item }: any, navigation: any) => (
   <TouchableOpacity
@@ -30,13 +33,12 @@ const renderItem = ({ item }: any, navigation: any) => (
       navigation.navigate('ChatScreen', {
         name: `${item.firstName} ${item.lastName}`,
         initials: getInitials(item.firstName, item.lastName),
-        contact: `${item.firstName}_${item.lastName}`, 
+        contact: `${item.firstName}_${item.lastName}`,
       })
     }
   >
     <View style={styles.resultItem}>
       <View style={styles.profileCircle}>
-
         <Text style={styles.profileInitials}>
           {`${item.firstName.charAt(0)}${item.lastName.charAt(0)}`}
         </Text>
@@ -46,20 +48,24 @@ const renderItem = ({ item }: any, navigation: any) => (
           {item.firstName} {item.lastName}
         </Text>
         <Text style={styles.resultPhoneNumber}>
-          {item.phone === '' ? 'Start a new chat' : `You: ${item.phone}`}
+          {item.lastMessage ? `You: ${item.lastMessage}` : 'Start a new chat'}
         </Text>
       </View>
-
-      
-      {/* <Text style={styles.resultTime}>01:48 AM</Text> */}
+      <View>
+        <Text style={styles.timeText}>
+          {item.lastMessageTime
+            ? formatTime(item.lastMessageTime)
+            : ''}
+        </Text>
+      </View>
     </View>
   </TouchableOpacity>
 );
 
-
 const MessageScreen = ({ navigation }: { navigation: any }) => {
   const [showModal, setShowModal] = useState(false);
   const [chats, setChats] = useState([]);
+  const isFocused = useIsFocused();
 
   const start = () => {
     setShowModal(!showModal);
@@ -76,15 +82,18 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
         const chatPromises = jsonData.users.map(async (contact) => {
           const key = `${contact.firstName}_${contact.lastName}`;
           const messages = await AsyncStorage.getItem(key);
-          // Limit the amount of data retrieved and stored
+          const chatInfo = await AsyncStorage.getItem(`${key}_info`);
+          
           let parsedMessages = messages ? JSON.parse(messages) : [];
+          let parsedChatInfo = chatInfo ? JSON.parse(chatInfo) : {};
+
           if (parsedMessages.length > 50) {
-            // Only keep the last 50 messages to prevent overflow
             parsedMessages = parsedMessages.slice(-50);
           }
-          return { ...contact, messages: parsedMessages };
+
+          return { ...contact, ...parsedChatInfo, messages: parsedMessages };
         });
-  
+
         const chatResults = await Promise.all(chatPromises);
         const existingChats = chatResults.filter((chat) => chat.messages.length > 0);
         setChats(existingChats);
@@ -92,10 +101,9 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
         console.error('Error fetching chats from AsyncStorage:', error);
       }
     };
-  
+
     fetchChats();
-  }, []);
-  
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
@@ -104,12 +112,12 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
       <View style={styles.chatListContainer}>
         {chats.length === 0 ? (
           <>
-          <View style={styles.noChatContainer}>
-            <Image source={Images.nochat} style={styles.noChatIcon} />
-            <Text style={styles.noChatText}>No chats, yet!</Text>
-            <TouchableOpacity style={styles.startChatButton} onPress={start}>
-              <Text style={styles.startChatButtonText}>Start Chat</Text>
-            </TouchableOpacity>
+            <View style={styles.noChatContainer}>
+              <Image source={Images.nochat} style={styles.noChatIcon} />
+              <Text style={styles.noChatText}>No chats, yet!</Text>
+              <TouchableOpacity style={styles.startChatButton} onPress={start}>
+                <Text style={styles.startChatButtonText}>Start Chat</Text>
+              </TouchableOpacity>
             </View>
           </>
         ) : (
@@ -121,7 +129,6 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
           />
         )}
       </View>
-
 
       <Modal visible={showModal} transparent animationType="slide">
         <TouchableWithoutFeedback onPress={start}>
@@ -147,7 +154,6 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -158,13 +164,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 10,
   },
-
   noChatContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   noChatIcon: {
     width: 166,
     height: 130,
@@ -250,6 +254,11 @@ const styles = StyleSheet.create({
   resultTime: {
     fontSize: 14,
     color: '#AAB4BE',
+  },
+  timeText: {
+    color: '#8e8e8e',
+    fontSize: 14,
+    alignSelf: 'flex-end',
   },
 });
 

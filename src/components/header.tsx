@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   img: {
     height: SCREEN_HEIGHT * 0.0469483568,
     width: SCREEN_WIDTH * 0.10178117048,
+    tintColor: 'white',
   },
   headertext: {
     fontSize: 18,
