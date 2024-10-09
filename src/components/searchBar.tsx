@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     },
     searchBar: {
         fontSize: vh(15),
+        maxWidth:300,
 
     },
 });

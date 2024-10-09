@@ -26,7 +26,7 @@ const MessageOptionsModal: React.FC<MessageOptionsModalProps> = ({
   setShowDeleteModal,
 }) => {
   
-  // Handle adding/removing reactions
+
   const handleReaction = (reaction: string) => {
     const updatedMessages = messages.map((msg) => {
       if (msg._id === message._id) {
@@ -68,7 +68,7 @@ const MessageOptionsModal: React.FC<MessageOptionsModalProps> = ({
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalBackground}>
           <View style={styles.modalContent}>
-            {/* Reaction options */}
+
             <View style={styles.reactionsRow}>
               {reactions.map((reaction, index) => (
                 <TouchableOpacity key={index} onPress={() => handleReaction(reaction)}>

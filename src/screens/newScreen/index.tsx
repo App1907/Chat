@@ -40,6 +40,13 @@ const NewChatScreen = ({ navigation }: { navigation: any }) => {
       .toUpperCase()}`;
   };
 
+
+  const getRandomColor = () => {
+    const colors = ['#FFB6C1', '#8A2BE2', '#5F9EA0', '#FF6347', '#FFD700', '#40E0D0'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+  
+
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
       onPress={() =>
@@ -51,7 +58,7 @@ const NewChatScreen = ({ navigation }: { navigation: any }) => {
       }
     >
       <View style={styles.resultItem}>
-        <View style={styles.profileCircle}>
+        <View style={[styles.profileCircle, { backgroundColor: getRandomColor() }]}>
           <Text style={styles.profileInitials}>
             {getInitials(item.firstName, item.lastName)}
           </Text>

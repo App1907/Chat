@@ -36,6 +36,7 @@ const BottomStack: React.FC = () => {
         name="ACCOUNT"
         component={Account}
         options={{
+          headerShown: false,
           tabBarIcon: ({ size }: TabBarIconProps) => (
             <Image
               source={Images.shopIcon}
@@ -64,7 +65,7 @@ const BottomStack: React.FC = () => {
           tabBarIcon: ({ size }: TabBarIconProps) => (
             <Image
               source={Images.Icon}
-              style={{ width: size - 5, height: size - 5 } as StyleProp<ImageStyle>} // Slightly smaller size
+              style={{ width: size - 5, height: size - 5 } as StyleProp<ImageStyle>} 
             />
           ),
         }}

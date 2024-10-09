@@ -8,6 +8,11 @@ import { useRoute } from '@react-navigation/native';
 import MessageOptionsModal from '../../components/messageOptions';
 import styles from './styles';
 
+
+interface CustomMessage extends IMessage {
+  emoji?: string;
+}
+
 interface ChatRoomScreenProps {
   route: {
     params?: {
@@ -44,6 +49,8 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
       },
     },
   ]);
+
+  // const [messages, setMessages] = useState<CustomMessage[]>([]);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -90,6 +97,8 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
     }
   };
 
+  
+
   const confirmDelete = () => {
     Alert.alert(
       "Delete Chat",
@@ -117,7 +126,7 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
     setShowOptionsModal(true);
   };
 
-  const renderInputToolbar = (props) => {
+  const renderInputToolbar = (props: any) => {
     return (
       <InputToolbar
         {...props}
@@ -133,7 +142,7 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
     );
   };
 
-  const renderSend = (props) => {
+  const renderSend = (props: any) => {
     return (
       <Send {...props}>
         <View style={styles.sendButtonContainer}>
@@ -144,28 +153,73 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
   };
 
 
-  const renderBubble = (props: any) => {
-    const messageReactions = props.currentMessage.reactions || [];
+  const handleEmojiSelect = async (emoji: string) => {
+    if (selectedMessage) {
+      const updatedMessages = messages.map((msg) => {
+        if (msg._id === selectedMessage._id) {
+          return {
+            ...msg,
+            emoji: emoji,
+          };
+        }
+        return msg;
+      });
+      setMessages(updatedMessages);
+  
+      try {
 
+        await AsyncStorage.setItem(contact, JSON.stringify(updatedMessages));
+      } catch (error) {
+        console.log('Error saving messages with emoji: ', error);
+      }
+    }
+    setShowOptionsModal(false);
+  };
+  
+
+
+  const renderBubble = (props: {currentMessage: CustomMessage}) => {
     return (
-      <View>
+      <View style={{marginTop: 20}}>
         <Bubble
           {...props}
           wrapperStyle={{
-            right: { backgroundColor: '#007AFF' },
-            left: { backgroundColor: '#E5E5EA' },
+            left: {
+              marginLeft: -30,
+            },
           }}
         />
-        {messageReactions.length > 0 && (
-          <View style={styles.reactionsContainer}>
-            {messageReactions.map((reaction: string, index: number) => (
-              <Text key={index} style={styles.reactionText}>{reaction}</Text>
-            ))}
-          </View>
-        )}
+        {props.currentMessage.reactions &&
+           (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                marginVertical: 5,
+                position: 'relative',
+              }}>
+              {props.currentMessage.reactions.map(
+                (emoji: any, index: number) => (
+                  <View
+                    style={{
+                      top: -65,
+                      right: 45,
+                      position: 'absolute',
+                      backgroundColor: 'grey',
+                      borderRadius: 15,
+                    }}>
+                    <Text key={index} style={{fontSize: 20}}>
+                      {emoji}
+                    </Text>
+                  </View>
+                ),
+              )}
+            </View>
+          )}
       </View>
     );
   };
+
 
   return (
     <SafeAreaView style={styles.safearea}>
@@ -241,6 +295,7 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
             message={selectedMessage}
             setMessages={setMessages}
             messages={messages}
+            onEmojiSelect={handleEmojiSelect}
           />
         )}
       </View>

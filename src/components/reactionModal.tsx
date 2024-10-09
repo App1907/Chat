@@ -1,93 +1,153 @@
 import React from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Modal, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Icons, Images } from '../assets';
+import { colors } from '../themes';
 
-interface ReactionModalProps {
-  visible: boolean;
-  message: string;
-  onClose: () => void;
-  onReactionSelect: (reaction: string) => void;
+interface SecureAccountModalProps {
+    visible: boolean;
+    closeModal: () => void;
+    onEmojiPress: (emoji: string) => void;
+    onDeletePress: () => void; 
 }
 
-const reactions = ['👍', '❤️', '😂', '🎉', '👎'];
+const ReactionModal = ({ visible, closeModal,onEmojiPress,onDeletePress }: SecureAccountModalProps) => {
+    return (
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={visible}
+            onRequestClose={closeModal}
+        >
+            <TouchableOpacity style={styles.modalBackground} activeOpacity={1} onPress={closeModal}>
+                <TouchableOpacity style={styles.modalContainer} activeOpacity={1}>
+                    <View style={styles.modalView}>
+                    <View style={styles.emoji}>
+                            <TouchableOpacity onPress={() => onEmojiPress('👍')}>
+                                <Image source={Icons.likeIcon} style={styles.emojiIcon} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => onEmojiPress('❤️')}>
+                                <Image source={Icons.heartIcon} style={styles.emojiIcon} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => onEmojiPress('😂')}>
+                                <Image source={Icons.laughIcon} style={styles.emojiIcon} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => onEmojiPress('🎉')}>
+                                <Image source={Icons.confettyIcon} style={styles.emojiIcon} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => onEmojiPress('👎')}>
+                                <Image source={Icons.dislikeIcon} style={styles.emojiIcon} />
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity>
+                            <View style={styles.optionContainer}>
+                                <Image source={Icons.replyIcon} style={styles.optionIcon} />
+                                <Text style={styles.modalOptionText}>Reply</Text>
+                            </View>
+                        </TouchableOpacity>
 
-const ReactionModal: React.FC<ReactionModalProps> = ({ visible, message, onClose, onReactionSelect }) => {
-  return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="fade"
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <Text style={styles.messageText}>{message}</Text>
+                        <TouchableOpacity>
+                            <View style={styles.optionContainer}>
+                                <Image source={Icons.pinIcon} style={styles.optionIcon} />
+                                <Text style={styles.modalOptionText}>Forward</Text>
+                            </View>
+                        </TouchableOpacity>
 
-          {/* Reaction Options */}
-          <View style={styles.reactionRow}>
-            {reactions.map((reaction, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.reactionButton}
-                onPress={() => onReactionSelect(reaction)}
-              >
-                <Text style={styles.reactionEmoji}>{reaction}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+                        <TouchableOpacity>
+                            <View style={styles.optionContainer}>
+                                <Image source={Icons.copy} style={styles.optionIcon} />
+                                <Text style={styles.modalOptionText}>Copy</Text>
+                            </View>
+                        </TouchableOpacity>
 
-          {/* Close Button */}
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
-  );
+                        <TouchableOpacity>
+                            <View style={styles.optionContainer}>
+                                <Image source={Icons.stars} style={styles.optionIcon} />
+                                <Text style={styles.modalOptionText}>Star</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity>
+                            <View style={styles.optionContainer}>
+                                <Image source={Icons.report} style={styles.optionIcon} />
+                                <Text style={styles.modalOptionText}>Report</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={onDeletePress}>
+                            <View style={styles.optionContainer}>
+                                <Image source={Icons.deleteIcon} style={styles.optionIcon} />
+                                <Text style={styles.modalOptionText1}>Delete</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+            </TouchableOpacity>
+        </Modal>
+    );
 };
 
-export default ReactionModal;
-
 const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    width: 300,
-    alignItems: 'center',
-  },
-  messageText: {
-    fontSize: 16,
-    marginBottom: 15,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  reactionRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  reactionButton: {
-    padding: 10,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    marginHorizontal: 5,
-  },
-  reactionEmoji: {
-    fontSize: 24,
-  },
-  closeButton: {
-    padding: 10,
-    backgroundColor: '#007AFF',
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: 'white',
-    fontWeight: '600',
-  },
+    modalBackground: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    optionContainer: {
+        padding: 15,
+        backgroundColor: colors.white,
+        borderRadius: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+        width: '100%',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    modalContainer: {
+        width: '100%',
+        backgroundColor: 'white',
+        borderTopRightRadius: 10,
+        borderTopLeftRadius: 10,
+        alignItems: 'center',
+    },
+    modalView: {
+        width: '100%',
+    },
+    modalOptionText: {
+        fontSize: 16,
+        color: colors.black,
+        paddingVertical: 10,
+        textAlign: 'center',
+        marginLeft: 20,
+    },
+    modalOptionText1: {
+        fontSize: 16,
+        color: colors.red,
+        paddingVertical: 10,
+        textAlign: 'center',
+        marginLeft: 20,
+    },
+    optionIcon: {
+        width: 24,
+        height: 24,
+        marginRight: 10,
+    },
+    emoji:{
+        flexDirection:'row',
+        padding: 26,
+        backgroundColor: colors.white,
+        alignItems: 'center',
+       justifyContent:'space-between',
+       margin:10,
+       borderRadius: 10,
+       borderBottomWidth: 1,
+       borderBottomColor: '#ddd',
+       width: '100%',
+    },
+    emojiIcon:{
+            width: 35,
+            height: 35,
+            marginRight: 10,
+    }
 });
+
+export default ReactionModal;
