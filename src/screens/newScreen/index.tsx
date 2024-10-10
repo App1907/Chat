@@ -14,6 +14,8 @@ import Contacts from 'react-native-contacts';
 import { Icons, Images } from '../../assets';
 import jsonData from '../../assets/data.json';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScreenNames } from '../../navigator/screenNames';
+import strings from '../../utils/strings';
 import styles from './styles';
 
 const NewChatScreen = ({ navigation }: { navigation: any }) => {
@@ -123,7 +125,7 @@ const NewChatScreen = ({ navigation }: { navigation: any }) => {
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate('ChatScreen', {
+          navigation.navigate(ScreenNames.ChatScreen, {
             name: `${firstName} ${lastName}`,
             initials: getInitials(firstName, lastName),
             contact: `${firstName}_${lastName}`,
@@ -172,7 +174,7 @@ const NewChatScreen = ({ navigation }: { navigation: any }) => {
           {filteredData.length === 0 && searchQuery !== '' ? (
             <View style={styles.noResultsContainer}>
               <Image source={Images.noResults} style={styles.noResultsImage} />
-              <Text style={styles.noResultsText}>No results found</Text>
+              <Text style={styles.noResultsText}>{strings.no_results}</Text>
             </View>
           ) : (
             <FlatList

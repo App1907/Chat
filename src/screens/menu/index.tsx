@@ -15,6 +15,7 @@ import Header from '../../components/header';
 import SearchBar from '../../components/searchBar';
 import { Icons, Images } from '../../assets';
 import { useIsFocused } from '@react-navigation/native';
+import { ScreenNames } from '../../navigator/screenNames';
 import strings from '../../utils/strings';
 import styles from './styles';
 
@@ -30,7 +31,7 @@ const formatTime = (timestamp: string) => {
 const renderItem = ({ item }: any, navigation: any) => (
   <TouchableOpacity
     onPress={() =>
-      navigation.navigate('ChatScreen', {
+      navigation.navigate(ScreenNames.ChatScreen, {
         name: `${item.firstName} ${item.lastName}`,
         initials: getInitials(item.firstName, item.lastName),
         contact: `${item.firstName}_${item.lastName}`,
@@ -73,7 +74,7 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
   };
 
   const newChat = () => {
-    navigation.navigate('NewScreen');
+    navigation.navigate(ScreenNames.NewScreen);
     setShowModal(false);
   };
 
@@ -103,7 +104,7 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
       const contactChats = await Promise.all(contactChatsPromises);
       return contactChats.filter((chat) => chat !== null);
     } catch (error) {
-      console.error('Error fetching contacts with chats:', error);
+      // console.error('Error fetching contacts with chats:', error);
       return [];
     }
   };
@@ -152,9 +153,9 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
         {chats.length === 0 ? (
           <View style={styles.noChatContainer}>
             <Image source={Images.nochat} style={styles.noChatIcon} />
-            <Text style={styles.noChatText}>No chats, yet!</Text>
+            <Text style={styles.noChatText}>{strings.no_chats}</Text>
             <TouchableOpacity style={styles.startChatButton} onPress={start}>
-              <Text style={styles.startChatButtonText}>Start Chat</Text>
+              <Text style={styles.startChatButtonText}>{strings.start_chat}</Text>
             </TouchableOpacity>
           </View>
         ) : (

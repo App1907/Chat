@@ -3,7 +3,7 @@ import { Dimensions, SafeAreaView, StatusBar, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import BottomStack from './bottomTab';
+import BottomTab from './bottomTab';
 import SplashScreen from '../screens/splashScreen';
 import TutorialScreen from '../screens/tutorialScreen';
 import NewChatScreen from '../screens/newScreen';
@@ -61,8 +61,8 @@ const RootNavigator: React.FC = () => {
             options={{ title: '', headerShown: false }} 
           /> */}
           <Stack.Screen
-            name="BottomStack"
-            component={BottomStack}
+            name="BottomTab"
+            component={BottomTab}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

@@ -6,6 +6,7 @@ import Home from '../../screens/home';
 import Account from '../../screens/account';
 import Favourites from '../../screens/favourites';
 import Menu from '../../screens/menu';
+import { ScreenNames } from '../screenNames';
 //import DrawerStack from './DrawerStack';
 // import HomeScreen from '../../screens/homeScreen'
 
@@ -17,7 +18,7 @@ type TabBarIconProps = {
 
 const Tab = createBottomTabNavigator();
 
-const BottomStack: React.FC = () => {
+const BottomTab: React.FC = () => {
   return (
     <Tab.Navigator initialRouteName="MENU">
       <Tab.Screen
@@ -75,7 +76,7 @@ const BottomStack: React.FC = () => {
   );
 };
 
-export default BottomStack;
+export default BottomTab;
 
 
 

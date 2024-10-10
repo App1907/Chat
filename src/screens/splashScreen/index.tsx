@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Images } from '../../assets';
-// import screensName from '../../navigator/screensName';
+import { ScreenNames } from '../../navigator/screenNames';
 import styles from './styles';
 
 const SplashScreen: React.FC = () => {
@@ -12,7 +12,7 @@ const SplashScreen: React.FC = () => {
     const timer = setTimeout(() => {
       navigation.reset({
         index: 0,
-        routes: [{ name: 'BottomStack' }],
+        routes: [{ name: (ScreenNames.BottomTab) }],
       });
     }, 2000);
 
