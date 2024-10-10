@@ -14,6 +14,7 @@ import Contacts from 'react-native-contacts';
 import { Icons, Images } from '../../assets';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './styles';
+import strings from '../../utils/strings';
 
 const Account = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -124,7 +125,7 @@ const Account = ({ navigation }) => {
           </Text>
           <Text style={styles.resultPhoneNumber}>
             {item.phoneNumbers.length === 0
-              ? 'Start a new chat'
+              ? strings.start_new_chat
               : `You: ${item.phoneNumbers[0].number}`}
           </Text>
         </View>
@@ -174,140 +175,6 @@ const Account = ({ navigation }) => {
 };
 
 export default Account;
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from 'react';
-// import { View, Text, Button, PermissionsAndroid, FlatList, Alert } from 'react-native';
-// import Contacts from 'react-native-contacts';
-
-// const SyncContacts = () => {
-//   const [contacts, setContacts] = useState([]);
-//   const [permissionGranted, setPermissionGranted] = useState(false);
-
-//   // Function to request permission for Android
-//   const requestContactPermission = async () => {
-//     try {
-//       const granted = await PermissionsAndroid.request(
-//         PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-//         {
-//           title: 'Contacts Permission',
-//           message: 'This app would like to view your contacts.',
-//           buttonPositive: 'OK',
-//         },
-//       );
-//       return granted === PermissionsAndroid.RESULTS.GRANTED;
-//     } catch (err) {
-//       console.warn(err);
-//       return false;
-//     }
-//   };
-
-//   // Load contacts after permission is granted
-//   const loadContacts = () => {
-//     Contacts.getAll()
-//       .then(contacts => {
-//         setContacts(contacts);
-//       })
-//       .catch(error => {
-//         console.log(error);
-//       });
-//   };
-
-//   useEffect(() => {
-//     // Check and request permission
-//     const checkPermission = async () => {
-//       if (Platform.OS === 'android') {
-//         const granted = await requestContactPermission();
-//         if (granted) {
-//           setPermissionGranted(true);
-//           loadContacts();
-//         } else {
-//           Alert.alert('Permission Denied', 'Cannot access contacts without permission');
-//         }
-//       } else {
-//         Contacts.checkPermission().then(permission => {
-//           if (permission === 'authorized') {
-//             setPermissionGranted(true);
-//             loadContacts();
-//           } else {
-//             Contacts.requestPermission().then(permission => {
-//               if (permission === 'authorized') {
-//                 setPermissionGranted(true);
-//                 loadContacts();
-//               } else {
-//                 Alert.alert('Permission Denied', 'Cannot access contacts without permission');
-//               }
-//             });
-//           }
-//         });
-//       }
-//     };
-
-//     checkPermission();
-//   }, []);
-
-//   return (
-//     <View style={{ flex: 1, padding: 20 }}>
-//       {permissionGranted ? (
-//         <>
-//           <Text style={{ fontSize: 20, marginBottom: 10 }}>Synced Contacts:</Text>
-//           <FlatList
-//             data={contacts}
-//             keyExtractor={item => item.recordID}
-//             renderItem={({ item }) => (
-//               <View style={{ marginBottom: 10 }}>
-//                 <Text>{`${item.givenName} ${item.familyName}`}</Text>
-//                 {item.phoneNumbers.map(phone => (
-//                   <Text key={phone.id}>{phone.number}</Text>
-//                 ))}
-//               </View>
-//             )}
-//           />
-//         </>
-//       ) : (
-//         <Text>No permission granted to access contacts.</Text>
-//       )}
-//     </View>
-//   );
-// };
-
-// export default SyncContacts;
-
-
-
-
-
-
-
-
-
-
-
-// import {View, Text } from 'react-native';
-// import React from 'react';
-
-// const Account = () => {
-//     return (
-//         <View>
-//             <Text> Account </Text>
-//         </View>
-//     )
-// }
-
-// export default Account;
-
-
-
-
 
 
 

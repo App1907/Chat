@@ -3,20 +3,19 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
   TouchableOpacity,
   FlatList,
-  TextInput,
-  SafeAreaView,
   Modal,
   TouchableWithoutFeedback,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Contacts from 'react-native-contacts';
 import jsonData from '../../assets/data.json';
 import Header from '../../components/header';
 import SearchBar from '../../components/searchBar';
 import { Icons, Images } from '../../assets';
 import { useIsFocused } from '@react-navigation/native';
+import strings from '../../utils/strings';
 import styles from './styles';
 
 const getInitials = (firstName: string, lastName: string) => {
@@ -49,7 +48,7 @@ const renderItem = ({ item }: any, navigation: any) => (
           {item.firstName} {item.lastName}
         </Text>
         <Text style={styles.resultPhoneNumber}>
-          {item.lastMessage ? `You: ${item.lastMessage}` : 'Start a new chat'}
+          {item.lastMessage ? ` ${strings.you}: ${item.lastMessage}` : `${strings.start_new_chat}`}
         </Text>
       </View>
       <View>
@@ -65,7 +64,8 @@ const renderItem = ({ item }: any, navigation: any) => (
 
 const MessageScreen = ({ navigation }: { navigation: any }) => {
   const [showModal, setShowModal] = useState(false);
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState<any[]>([]);
+  const [syncedChats, setSyncedChats] = useState<any[]>([]);
   const isFocused = useIsFocused();
 
   const start = () => {
@@ -77,14 +77,46 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
     setShowModal(false);
   };
 
+
+  const fetchSyncedContactsChats = async () => {
+    try {
+      const contacts = await Contacts.getAll();
+      const contactChatsPromises = contacts.map(async (contact) => {
+        const key = `${contact.givenName}_${contact.familyName || 'Unknown'}`;
+        const messages = await AsyncStorage.getItem(key);
+        const chatInfo = await AsyncStorage.getItem(`${key}_info`);
+
+        let parsedMessages = messages ? JSON.parse(messages) : [];
+        let parsedChatInfo = chatInfo ? JSON.parse(chatInfo) : {};
+
+        if (parsedMessages.length > 0) {
+          return {
+            firstName: contact.givenName,
+            lastName: contact.familyName || '',
+            ...parsedChatInfo,
+            messages: parsedMessages,
+          };
+        }
+        return null;
+      });
+
+      const contactChats = await Promise.all(contactChatsPromises);
+      return contactChats.filter((chat) => chat !== null);
+    } catch (error) {
+      console.error('Error fetching contacts with chats:', error);
+      return [];
+    }
+  };
+
   useEffect(() => {
     const fetchChats = async () => {
       try {
+
         const chatPromises = jsonData.users.map(async (contact) => {
           const key = `${contact.firstName}_${contact.lastName}`;
           const messages = await AsyncStorage.getItem(key);
           const chatInfo = await AsyncStorage.getItem(`${key}_info`);
-          
+
           let parsedMessages = messages ? JSON.parse(messages) : [];
           let parsedChatInfo = chatInfo ? JSON.parse(chatInfo) : {};
 
@@ -95,9 +127,15 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
           return { ...contact, ...parsedChatInfo, messages: parsedMessages };
         });
 
+
         const chatResults = await Promise.all(chatPromises);
         const existingChats = chatResults.filter((chat) => chat.messages.length > 0);
-        setChats(existingChats);
+
+
+        const syncedChats = await fetchSyncedContactsChats();
+
+
+        setChats([...existingChats, ...syncedChats]);
       } catch (error) {
         console.error('Error fetching chats from AsyncStorage:', error);
       }
@@ -112,15 +150,13 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
       <SearchBar />
       <View style={styles.chatListContainer}>
         {chats.length === 0 ? (
-          <>
-            <View style={styles.noChatContainer}>
-              <Image source={Images.nochat} style={styles.noChatIcon} />
-              <Text style={styles.noChatText}>No chats, yet!</Text>
-              <TouchableOpacity style={styles.startChatButton} onPress={start}>
-                <Text style={styles.startChatButtonText}>Start Chat</Text>
-              </TouchableOpacity>
-            </View>
-          </>
+          <View style={styles.noChatContainer}>
+            <Image source={Images.nochat} style={styles.noChatIcon} />
+            <Text style={styles.noChatText}>No chats, yet!</Text>
+            <TouchableOpacity style={styles.startChatButton} onPress={start}>
+              <Text style={styles.startChatButtonText}>Start Chat</Text>
+            </TouchableOpacity>
+          </View>
         ) : (
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -137,15 +173,15 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
             <View style={styles.modalContent}>
               <TouchableOpacity style={styles.modalOption} onPress={newChat}>
                 <Image source={Icons.newChat} style={styles.modalIcon} />
-                <Text style={styles.modalText}>New Chat</Text>
+                <Text style={styles.modalText}>{strings.new_chat}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalOption}>
                 <Image source={Icons.groupChat} style={styles.modalIcon} />
-                <Text style={styles.modalText}>New Group Chat</Text>
+                <Text style={styles.modalText}>{strings.new_group_chat}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalOption}>
                 <Image source={Icons.announcement} style={styles.modalIcon} />
-                <Text style={styles.modalText}>New Announcement</Text>
+                <Text style={styles.modalText}>{strings.new_announcement}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -154,6 +190,5 @@ const MessageScreen = ({ navigation }: { navigation: any }) => {
     </View>
   );
 };
-
 
 export default MessageScreen;

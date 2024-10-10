@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, TouchableWithoutFeedback, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Alert,
+  Modal,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GiftedChat, IMessage, InputToolbar, Send, Bubble } from 'react-native-gifted-chat';  
+import { GiftedChat, IMessage, InputToolbar, Send, Bubble } from 'react-native-gifted-chat';
 import { Icons } from '../../assets';
 import { useRoute } from '@react-navigation/native';
 import MessageOptionsModal from '../../components/messageOptions';
 import styles from './styles';
-
+import strings from '../../utils/strings';
 
 interface CustomMessage extends IMessage {
   emoji?: string;
@@ -29,6 +37,8 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
   const name = route?.params?.name || 'Unknown';
   const initials = route?.params?.initials || 'U';
 
+
+
   const [messages, setMessages] = useState([
     {
       _id: 1,
@@ -45,15 +55,13 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
       createdAt: new Date(),
       user: {
         _id: 1,
-        name,
+        // name,
       },
     },
   ]);
 
-  // const [messages, setMessages] = useState<CustomMessage[]>([]);
-
+  // const [messages, setMessages] = useState<IMessage[]>([]);
   const [showModal, setShowModal] = useState(false);
-
   const [selectedMessage, setSelectedMessage] = useState<IMessage | null>(null);
   const [showOptionsModal, setShowOptionsModal] = useState(false);
 
@@ -97,77 +105,83 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
     }
   };
 
-  
-
   const confirmDelete = () => {
     Alert.alert(
-      "Delete Chat",
-      "Are you sure you want to delete this chat?",
+      strings.delete_chat,
+      'Are you sure you want to delete this chat?',
       [
-        { text: "Cancel", style: "cancel" },
-        { text: "Delete", onPress: deleteChat, style: "destructive" }
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', onPress: deleteChat, style: 'destructive' },
       ]
     );
   };
 
-  const handleDeleteMessage = async (messageId: number) => {
-    const updatedMessages = messages.filter(message => message._id !== messageId);
-    setMessages(updatedMessages);
 
+
+  const handleDeleteMessage = async (messageId: number) => {
+
+    const updatedMessages = messages.filter((message) => message._id !== messageId);
+  
+
+    setMessages(updatedMessages);
+  
+
+    const lastMessage = updatedMessages.length > 0 ? updatedMessages[0] : null;
+    const updatedChatInfo = {
+      lastMessage: lastMessage ? lastMessage.text : '',
+      lastMessageTime: lastMessage ? new Date(lastMessage.createdAt).toISOString() : '',
+    };
+  
     try {
+
       await AsyncStorage.setItem(contact, JSON.stringify(updatedMessages));
+      await AsyncStorage.setItem(`${contact}_info`, JSON.stringify(updatedChatInfo));
     } catch (error) {
       console.log('Error deleting message: ', error);
     }
   };
+
+
+  
 
   const openOptionsModal = (message: IMessage) => {
     setSelectedMessage(message);
     setShowOptionsModal(true);
   };
 
-  const renderInputToolbar = (props: any) => {
-    return (
-      <InputToolbar
-        {...props}
-        containerStyle={styles.inputToolbar}
-        renderActions={() => (
-          <TouchableOpacity onPress={() => { }}>
-            <Image source={Icons.plus} style={styles.plusIcon} />
-          </TouchableOpacity>
-        )}
-        placeholder="Your typed message"
-        textInputStyle={styles.textInput}
-      />
-    );
-  };
+  const renderInputToolbar = (props: any) => (
+    <InputToolbar
+      {...props}
+      containerStyle={styles.inputToolbar}
+      renderActions={() => (
+        <TouchableOpacity onPress={() => {}}>
+          <Image source={Icons.plus} style={styles.plusIcon} />
+        </TouchableOpacity>
+      )}
+      placeholder="Your typed message"
+      textInputStyle={styles.textInput}
+    />
+  );
 
-  const renderSend = (props: any) => {
-    return (
-      <Send {...props}>
-        <View style={styles.sendButtonContainer}>
-          <Image source={Icons.send} style={styles.sendIcon} />
-        </View>
-      </Send>
-    );
-  };
-
+  const renderSend = (props: any) => (
+    <Send {...props}>
+      <View style={styles.sendButtonContainer}>
+        <Image source={Icons.send} style={styles.sendIcon} />
+      </View>
+    </Send>
+  );
 
   const handleEmojiSelect = async (emoji: string) => {
     if (selectedMessage) {
       const updatedMessages = messages.map((msg) => {
         if (msg._id === selectedMessage._id) {
-          return {
-            ...msg,
-            emoji: emoji,
-          };
+          return { ...msg, emoji };
         }
         return msg;
       });
       setMessages(updatedMessages);
-  
-      try {
 
+      try {
         await AsyncStorage.setItem(contact, JSON.stringify(updatedMessages));
       } catch (error) {
         console.log('Error saving messages with emoji: ', error);
@@ -175,51 +189,35 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
     }
     setShowOptionsModal(false);
   };
-  
 
-
-  const renderBubble = (props: {currentMessage: CustomMessage}) => {
-    return (
-      <View style={{marginTop: 20}}>
-        <Bubble
-          {...props}
-          wrapperStyle={{
-            left: {
-              marginLeft: -30,
-            },
-          }}
-        />
-        {props.currentMessage.reactions &&
-           (
+  const renderBubble = (props: { currentMessage: CustomMessage }) => (
+    <View style={{ marginTop: 20 }}>
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: { marginLeft: -30 },
+        }}
+      />
+      {props.currentMessage.reactions && (
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginVertical: 5, position: 'relative' }}>
+          {props.currentMessage.reactions.map((emoji: any, index: number) => (
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                marginVertical: 5,
-                position: 'relative',
-              }}>
-              {props.currentMessage.reactions.map(
-                (emoji: any, index: number) => (
-                  <View
-                    style={{
-                      top: -65,
-                      right: 45,
-                      position: 'absolute',
-                      backgroundColor: 'grey',
-                      borderRadius: 15,
-                    }}>
-                    <Text key={index} style={{fontSize: 20}}>
-                      {emoji}
-                    </Text>
-                  </View>
-                ),
-              )}
+                top: -65,
+                right: 45,
+                position: 'absolute',
+                backgroundColor: 'grey',
+                borderRadius: 15,
+              }}
+              key={index}
+            >
+              <Text style={{ fontSize: 20 }}>{emoji}</Text>
             </View>
-          )}
-      </View>
-    );
-  };
-
+          ))}
+        </View>
+      )}
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.safearea}>
@@ -247,22 +245,14 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
         <GiftedChat
           messages={messages}
           onSend={(newMessages) => onSend(newMessages)}
-          user={{
-            _id: 2,
-            name: 'You',
-          }}
+          user={{ _id: 2, name: 'You' }}
           renderBubble={renderBubble}
           onLongPress={(context, message) => openOptionsModal(message)}
           renderInputToolbar={renderInputToolbar}
           renderSend={renderSend}
         />
 
-        <Modal
-          transparent
-          visible={showModal}
-          animationType="slide"
-          onRequestClose={() => setShowModal(false)}
-        >
+        <Modal transparent visible={showModal} animationType="slide" onRequestClose={() => setShowModal(false)}>
           <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
             <View style={styles.modalBackground}>
               <View style={styles.modalContent}>
@@ -302,7 +292,5 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
     </SafeAreaView>
   );
 };
-
-
 
 export default ChatScreen;

@@ -104,6 +104,7 @@ export default StyleSheet.create({
     timeText: {
       color: '#8e8e8e',
       fontSize: 14,
-      alignSelf: 'flex-end',
+      // alignSelf: 'flex-end',
+      right:10,
     },
   });

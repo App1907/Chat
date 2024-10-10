@@ -49,6 +49,7 @@ const BottomStack: React.FC = () => {
         name="FAVOURITES"
         component={Favourites}
         options={{
+          headerShown: false,
           tabBarIcon: ({ size }: TabBarIconProps) => (
             <Image
               source={Images.settingsIcon}
