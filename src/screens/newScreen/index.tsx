@@ -15,6 +15,7 @@ import { Icons, Images } from '../../assets';
 import jsonData from '../../assets/data.json';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScreenNames } from '../../navigator/screenNames';
+import {getRandomColor} from '../../utils/functions';
 import strings from '../../utils/strings';
 import styles from './styles';
 
@@ -105,10 +106,6 @@ const NewChatScreen = ({ navigation }: { navigation: any }) => {
     return `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
   };
 
-  const getRandomColor = () => {
-    const colors = ['#FFB6C1', '#8A2BE2', '#5F9EA0', '#FF6347', '#FFD700', '#40E0D0'];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
 
   const renderItem = ({ item }: any) => {
 

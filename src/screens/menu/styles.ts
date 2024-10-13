@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
+import colors from '../../utils/colors';
 
 export default StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#e7edf3',
+      backgroundColor: colors.secondary,
     },
     chatListContainer: {
       flex: 1,
@@ -21,17 +22,17 @@ export default StyleSheet.create({
     },
     noChatText: {
       fontSize: 16,
-      color: '#7E8A9A',
+      color: colors.noResults,
       marginVertical: 20,
     },
     startChatButton: {
-      backgroundColor: '#2A7BBB',
+      backgroundColor: colors.circle,
       borderRadius: 8,
       paddingHorizontal: 50,
       paddingVertical: 10,
     },
     startChatButtonText: {
-      color: 'white',
+      color: colors.white,
       fontWeight: '600',
     },
     modalBackground: {
@@ -40,7 +41,7 @@ export default StyleSheet.create({
       backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
     modalContent: {
-      backgroundColor: 'white',
+      backgroundColor: colors.white,
       paddingVertical: 20,
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
@@ -50,7 +51,7 @@ export default StyleSheet.create({
       alignItems: 'center',
       padding: 16,
       borderBottomWidth: 1,
-      borderBottomColor: '#E5E5E5',
+      borderBottomColor: colors.borderBottomColor,
     },
     modalIcon: {
       height: 24,
@@ -65,13 +66,13 @@ export default StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 10,
-      backgroundColor: 'white',
-      borderBottomColor: '#E5E5E5',
+      backgroundColor: colors.white,
+      borderBottomColor: colors.borderBottomColor,
       borderBottomWidth: 1,
       justifyContent: 'space-between',
     },
     profileCircle: {
-      backgroundColor: '#2A7BBB',
+      backgroundColor: colors.primary,
       borderRadius: 25,
       width: 50,
       height: 50,
@@ -80,7 +81,7 @@ export default StyleSheet.create({
       alignItems: 'center',
     },
     profileInitials: {
-      color: '#FFFFFF',
+      color: colors.white,
       fontSize: 18,
       fontWeight: 'bold',
     },
@@ -95,11 +96,11 @@ export default StyleSheet.create({
     },
     resultPhoneNumber: {
       fontSize: 14,
-      color: '#AAB4BE',
+      color: colors.resultPhone,
     },
     resultTime: {
       fontSize: 14,
-      color: '#AAB4BE',
+      color: colors.resultPhone,
     },
     timeText: {
       color: '#8e8e8e',

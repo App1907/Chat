@@ -1,9 +1,11 @@
 import { StyleSheet } from "react-native";
+import colors from '../../utils/colors';
+
 
 export default StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#F5F7FA',
+      backgroundColor: colors.containerbackground,
     },
     header: {
       flexDirection: 'row',
@@ -12,8 +14,8 @@ export default StyleSheet.create({
       paddingHorizontal: 16,
       paddingVertical: 10,
       elevation: 2,
-      backgroundColor: '#F8F9F9',
-      borderBottomColor: '#E5E5E5',
+      backgroundColor: colors.headerbackground,
+      borderBottomColor: colors.borderBottomColor,
       borderBottomWidth: 1,
     },
     backIcon: {
@@ -23,7 +25,7 @@ export default StyleSheet.create({
     },
     searchInput: {
       flex: 1,
-      backgroundColor: '#FFFFFF',
+      backgroundColor: colors.white,
       borderRadius: 8,
       paddingHorizontal: 10,
       height: 40,
@@ -51,18 +53,18 @@ export default StyleSheet.create({
     },
     noResultsText: {
       fontSize: 18,
-      color: '#7E8A9A',
+      color: colors.noResults,
     },
     resultItem: {
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 10,
-      borderBottomColor: '#E5E5E5',
+      borderBottomColor: colors.borderBottomColor,
       borderBottomWidth: 1,
       justifyContent: 'space-between',
     },
     profileCircle: {
-      backgroundColor: '#2A7BBB',
+      backgroundColor: colors.circle,
       borderRadius: 25,
       width: 50,
       height: 50,
@@ -70,7 +72,7 @@ export default StyleSheet.create({
       alignItems: 'center',
     },
     profileInitials: {
-      color: '#FFFFFF',
+      color: colors.white,
       fontSize: 18,
       fontWeight: 'bold',
     },
@@ -84,6 +86,6 @@ export default StyleSheet.create({
     },
     resultPhoneNumber: {
       fontSize: 14,
-      color: '#AAB4BE',
+      color: colors.resultPhone,
     },
   });
