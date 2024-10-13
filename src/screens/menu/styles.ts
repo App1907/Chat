@@ -60,7 +60,7 @@ export default StyleSheet.create({
     },
     modalText: {
       fontSize: 16,
-      color: '#4A4A4A',
+      color: colors.modalText,
     },
     resultItem: {
       flexDirection: 'row',
@@ -92,7 +92,7 @@ export default StyleSheet.create({
     resultName: {
       fontSize: 16,
       fontWeight: 'bold',
-      color: '#4A4A4A',
+      color: colors.modalText,
     },
     resultPhoneNumber: {
       fontSize: 14,

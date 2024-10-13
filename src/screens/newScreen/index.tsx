@@ -114,7 +114,7 @@ const NewChatScreen = ({ navigation }: { navigation: any }) => {
     const firstName = isFromContacts ? item.givenName : item.firstName;
     const lastName = isFromContacts ? item.familyName : item.lastName;
     const phone = isFromContacts
-      ? (item.phoneNumbers.length > 0 ? item.phoneNumbers[0].number : 'Start a new chat')
+      ? (item.phoneNumbers.length > 0 ? `You: ${item.phoneNumbers[0].number}` : 'Start a new chat')
       : item.phone === ''
       ? 'Start a new chat'
       : `You: ${item.phone}`;

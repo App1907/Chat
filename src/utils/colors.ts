@@ -12,6 +12,7 @@ export default {
     noResults: '#7E8A9A',
     resultPhone: '#AAB4BE',
     circle: '#2A7BBB',
+    modalText: '#4A4A4A',
 
 
     imgback: "#2C7BBB",
