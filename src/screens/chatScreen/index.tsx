@@ -102,11 +102,23 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
   };
 
   const handleDeleteMessage = async (messageId: number) => {
-    const updatedMessages = messages.filter(message => message._id !== messageId);
-    setMessages(updatedMessages);
 
+    const updatedMessages = messages.filter((message) => message._id !== messageId);
+  
+
+    setMessages(updatedMessages);
+  
+
+    const lastMessage = updatedMessages.length > 0 ? updatedMessages[0] : null;
+    const updatedChatInfo = {
+      lastMessage: lastMessage ? lastMessage.text : '',
+      lastMessageTime: lastMessage ? new Date(lastMessage.createdAt).toISOString() : '',
+    };
+  
     try {
+
       await AsyncStorage.setItem(contact, JSON.stringify(updatedMessages));
+      await AsyncStorage.setItem(`${contact}_info`, JSON.stringify(updatedChatInfo));
     } catch (error) {
       console.log('Error deleting message: ', error);
     }
