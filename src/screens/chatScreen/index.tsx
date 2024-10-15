@@ -286,6 +286,7 @@ const ChatScreen: React.FC<ChatRoomScreenProps> = ({ route, navigation }) => {
             setMessages={setMessages}
             messages={messages}
             onEmojiSelect={handleEmojiSelect}
+            contact={contact}
           />
         )}
       </View>

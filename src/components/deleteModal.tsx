@@ -1,49 +1,35 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../utils/dimension';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { Icons } from '../assets';
 
 interface DeleteMessageModalProps {
   visible: boolean;
   onClose: () => void;
-  onDelete: () => void;
-  imageSource: any; 
-  headerText: string; 
-  subText: string; 
-  ButtonText1: string; 
-  ButtonText2: string; 
+  onConfirmDelete: () => void;
 }
 
 const DeleteMessageModal: React.FC<DeleteMessageModalProps> = ({
   visible,
   onClose,
-  onDelete,
-  imageSource,
-  headerText,
-  subText,
-  ButtonText1,
-  ButtonText2,
+  onConfirmDelete,
 }) => {
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalContainer}>
+    <Modal visible={visible} transparent animationType="fade">
+      <View style={styles.modalBackground}>
         <View style={styles.modalContent}>
-          <Image source={imageSource} style={styles.image} />
-
-          <Text style={styles.headerText}>{headerText}</Text>
-          <Text style={styles.subText}>{subText}</Text>
-
+          <View style={styles.deleteIconContainer}>
+            <Image source={Icons.deleteChat} style={styles.deleteIcon} />
+          </View>
+          <Text style={styles.deleteTitle}>Delete message?</Text>
+          <Text style={styles.deleteSubtitle}>
+            Are you sure you want to delete this message?
+          </Text>
           <View style={styles.buttonRow}>
-            <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
-              <Text style={styles.cancelButtonText}>{ButtonText1}</Text>
+            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+              <Text style={styles.cancelButtonText}>No, Cancel</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity style={styles.deleteButton} onPress={onDelete} >
-              <Text style={styles.deleteButtonText}>{ButtonText2}</Text>
+            <TouchableOpacity style={styles.deleteButton} onPress={onConfirmDelete}>
+              <Text style={styles.deleteButtonText}>Yes, Delete</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -53,40 +39,40 @@ const DeleteMessageModal: React.FC<DeleteMessageModalProps> = ({
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  modalBackground: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: SCREEN_WIDTH * 0.87786259542,
-    height: SCREEN_HEIGHT * 0.30291079812,
-    paddingVertical: SCREEN_HEIGHT * 0.03286384976,
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    width: 300,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
     alignItems: 'center',
   },
-  image: {
-    width: 50,
-    height: 50,
-    marginBottom: 16,
-    resizeMode: 'contain',
+  deleteIconContainer: {
+    backgroundColor: '#FCE7E7',
+    padding: 15,
+    borderRadius: 50,
+    marginBottom: 20,
   },
-  headerText: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 6,
-    color: '#3A4F5F',
-    lineHeight: 26,
+  deleteIcon: {
+    width: 40,
+    height: 40,
   },
-  subText: {
-    fontSize: 13,
-    color: '#60707D',
+  deleteTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  deleteSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 20,
     textAlign: 'center',
-    marginBottom: 28,
-    fontWeight: '400',
-    lineHeight: 19.5,
   },
   buttonRow: {
     flexDirection: 'row',
@@ -94,37 +80,27 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cancelButton: {
-    backgroundColor: '#f6f7f7',
-    borderRadius: 5,
     flex: 1,
+    padding: 12,
     marginRight: 10,
+    backgroundColor: '#E5E5E5',
+    borderRadius: 5,
     alignItems: 'center',
-    width: 100,
-    height: 48,
-    justifyContent: 'center',
-    marginLeft:38,
-
   },
   cancelButtonText: {
-    fontSize: 14,
-    color: '#3A4F5F',
-    fontWeight: '500',
+    fontSize: 16,
+    color: '#4A4A4A',
   },
   deleteButton: {
-    backgroundColor: '#2A7BBB',
-    justifyContent: 'center',
-    borderRadius: 5,
     flex: 1,
-    marginLeft: 10,
+    padding: 12,
+    backgroundColor: '#007BFF',
+    borderRadius: 5,
     alignItems: 'center',
-    width: 100,
-    height: 48,
-    marginRight:38,
   },
   deleteButtonText: {
-    fontSize: 14,
-    color: '#fff',
-    fontWeight: '500',
+    fontSize: 16,
+    color: 'white',
   },
 });
 
