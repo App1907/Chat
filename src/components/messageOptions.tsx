@@ -3,6 +3,7 @@ import { View, Text, Modal, TouchableOpacity, Image, StyleSheet, TouchableWithou
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Icons } from '../assets';
 import DeleteMessageModal from './deleteModal';
+import colors from '../utils/colors';
 
 interface MessageOptionsModalProps {
   visible: boolean;
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     padding: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -137,14 +138,14 @@ const styles = StyleSheet.create({
   },
   modalOptions: {
     borderTopWidth: 1,
-    borderTopColor: '#E5E5E5',
+    borderTopColor: colors.borderBottomColor,
   },
   option: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E5E5',
+    borderBottomColor: colors.borderBottomColor,
   },
   icon: {
     width: 24,
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
-    color: '#4A4A4A',
+    color: colors.modalText,
   },
 });
 

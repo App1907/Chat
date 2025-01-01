@@ -6,7 +6,7 @@ import { Icons } from '../assets';
 const SearchBar = () => {
     return (
         <View style={styles.searchBarContainer}>
-            <Image source={Icons.graySearch} style={{width:vw(15), height:vh(15), resizeMode:'contain', marginLeft:vw(18.5), marginRight:vw(18.5), tintColor:'#85929C'}}/>
+            <Image source={Icons.graySearch} style={styles.searchImage}/>
             <TextInput style={styles.searchBar} 
             placeholder="Search messages..." 
             placeholderTextColor="#ABB3BA"/>
@@ -30,6 +30,14 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         alignItems:'center',
 
+    },
+    searchImage: {
+        width:vw(15), 
+        height:vh(15), 
+        resizeMode:'contain', 
+        marginLeft:vw(18.5), 
+        marginRight:vw(18.5), 
+        tintColor:'#85929C',
     },
     searchBar: {
         fontSize: vh(15),
